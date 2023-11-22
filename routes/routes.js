@@ -13,9 +13,10 @@ const bcrypt = require("bcryptjs");
 // registration api starts
 router.post("/register", async (req, res) => {
 
-    const name = req.body.name
-    const email = req.body.email
-    const password = req.body.password
+    const name = req.body.name;
+    const email = req.body.email;
+    const number = req.body.number;
+    const password = req.body.password;
     const token = uuidv4();
 
     const errors = [];
@@ -25,6 +26,9 @@ router.post("/register", async (req, res) => {
     }
     if (!email) {
         errors.push("Please enter an email");
+    }
+    if (!number) {
+        errors.push("Please enter a number");
     }
     if (!password) {
         errors.push("Please enter a password");
@@ -44,6 +48,7 @@ router.post("/register", async (req, res) => {
             const user = new User({
                 name,
                 email,
+                number,
                 hashedPassword,
                 token,
             });
@@ -98,8 +103,7 @@ router.post("/login", async (req, res) => {
             res.status(400).json({errors});
             return;
         } else {
-            const username = user.name;
-            res.status(201).send({ username, message: "Logged in" });
+            res.status(201).send({ user, message: "Logged in" });
         }
     }
 
